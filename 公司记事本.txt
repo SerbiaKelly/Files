@@ -1,0 +1,24 @@
+SendProxyMessage(msg, this.OnCreateRoomResult)
+
+local msg = Message.New()
+msg.type = csm_pb.CHUPAI
+local body = csm_pb.POperation()
+body.mahjong = plate
+msg.body = body:SerializeToString()
+SendGameMessage(msg, nil)
+
+git@106.14.29.177:/home/git/phz-client.git
+106.14.29.177/dzj/download/xhzd.apk
+106.14.29.177	root	Haiya@2016
+
+local breakSocketHandle,debugXpCall = require("LuaDebug")("localhost",7003)
+
+VSCode隐藏meta
+"files.exclude":{
+        "**/*.meta": true
+    }
+
+Altas Maker
+
+王真 192.168.2.140 18888
+1101162695
