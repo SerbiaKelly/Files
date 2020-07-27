@@ -1,0 +1,98 @@
+Janakid
+简纳基茨德
+重装系统软件安装
+直接使用默认路径装C盘：搜狗输入法 UnityHub TIM Git(...) VisualStudio JavaJdk/Jre
+
+https://bitbucket.org/Unity-Technologies/assetbundlegraphtool
+
+2020
+Find Reference 2
+unity spriteatlas
+Unity减少包体大小
+加密、加固、混淆
+微信小游戏和H5原理及区别
+
+Unity各种插件
+"Unity编辑器扩展" AssetBundle 资源依赖加载打包机制管理
+异形屏适配
+3D/2D骨骼动画
+FGUI
+Spine
+屏蔽字实现
+"XAsset" ILRuntime "GameFramework" XLua
+ECS
+Lua
+C++
+网络通信、网络编程
+数据结构和算法LeetCode 设计模式
+UE4引擎
+
+跳D C dA dsadA
+跳C C dA dsadsaA
+
+Rain World
+
+------------------天黑请闭眼-----------------------
+网络 SSH客户端 C:\Program Files\TortoiseGit\bin\TortoiseGitPlink.exe
+git CLI stdin wrapper
+git@git.code.tencent.com:kill/client.git    克隆项目
+git push origin GuiLing 						将GuiLing分支推送到远程仓库
+git pull[remote] [branch]
+
+
+调试方法
+在LuaClient.cs脚本preMainInit()方法中加入以下调试代码
+#if UNITY_EDITOR
+	string str = "local breakSocketHandle,debugXpCall = require(\"client.LuaDebugjit\")(\"localhost\",7003)";
+	luaEnv.DoString(str);
+#endif
+	......
+放入LuaDebug.lua和LuaDebugjit.lua脚本
+VSCode项目中
+---launch.json---
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Unity-xlua",
+            "type": "lua",
+            "request": "attach",
+            "runtimeType": "Unity",
+            "localRoot": "${workspaceRoot}",
+            "port": 7003,
+            "printType": 1
+        }
+    ]
+}
+---settings.json---
+{
+    "luaide.scriptRoots": [
+        "lua"
+    ]
+}
+
+常用写法
+self:SetActive("Game/UI/UI_Main", false)
+CS.UnityEngine.Debug.Log()
+CS.UnityEngine.Debug.LogWarning()
+CS.UnityEngine.Debug.LogError()
+CS.UnityEngine.Object.Destroy()
+
+GetApp():GetAccount():Register("lq","11", "lq1", 1)
+GetApp():GetAccount():Register("1388","1111", "紫炎uat", 1)
+
+广度优先 (stack)
+1.队列中取出一个节点
+2.操作该节点
+3.取出该节点下所有子节点添加到队列中，移除该节点
+重复以上操作
+
+主要做什么类型游戏
+团队结构
+
+赛车游戏（谷歌网盘，百度网盘，腾讯微云）
+qqq
+www
