@@ -11,6 +11,10 @@ git@106.14.29.177:/home/git/phz-client.git
 106.14.29.177/dzj/download/xhzd.apk
 106.14.29.177	root	Haiya@2016
 
+Proto2编译环境安装（https://blog.csdn.net/huutu/article/details/49672225）
+安装Python2.7
+protobuf-2.4.1\python 目录下执行 python setup.py install （有错误可先下载setuptools-0.6c11-py2.7.egg放在该目录下在执行命令）
+
 VsCode调试
 HPLuaManager.cs 94/95取消注释
 local breakSocketHandle,debugXpCall = require("LuaDebug")("localhost",7003)
