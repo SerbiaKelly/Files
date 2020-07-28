@@ -30,3 +30,17 @@ Altas Maker
 
 王真 192.168.2.140 18888
 1101162695
+
+AHM_58
+
+table -90 195
+
+安化麻将脚本待修改
+GetHNZZMRuleText
+local hnm_pb = require("hnm_pb");
+
+飘分
+AHM_View.TogglePiaofen DZAHM
+
+hnm_pb
+dzm_pb
