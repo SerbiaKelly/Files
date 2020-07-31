@@ -47,5 +47,6 @@ dzm_pb
 DZAHM_PlayLogic.lua 80
 
 选中2  飘分准备后没显示选择飘几分
-玩家出牌 传来的 operations mahjongs为空
-玩家有操作未操作退出后重进无法显示未完成的操作
+掷骰子
+群管理设置,语音和聊天
+	optional bool sendMsgAllowed = 120;
