@@ -1,7 +1,7 @@
 Janakid
 简纳基茨德
 重装系统软件安装
-直接装C盘：搜狗输入法 UnityHub TIM Git(...) VisualStudio JavaJdk/Jre
+直接使用默认路径装C盘：搜狗输入法 UnityHub TIM Git(...) VisualStudio JavaJdk/Jre
 
 https://bitbucket.org/Unity-Technologies/assetbundlegraphtool
 
@@ -18,7 +18,7 @@ Unity各种插件
 3D/2D骨骼动画
 FGUI
 Spine
-屏蔽字
+屏蔽字实现
 "XAsset" ILRuntime "GameFramework" XLua
 ECS
 Lua
