@@ -65,3 +65,7 @@ DZAHM_PlayLogic FindAllChiPlates
 	tableRemoveSameEle(plates)
 	relevantPlates = plates
 	tableRemoveSameEle(relevantPlates)
+
+	回放 参数
+	打骰子动画
+	托管
