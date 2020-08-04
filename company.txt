@@ -69,3 +69,8 @@ DZAHM_PlayLogic FindAllChiPlates
 	回放 参数
 	打骰子动画
 	托管
+
+ReadyButton
+DZAHM_UILayer
+InitRoomInfo
+gameUIObjects.ButtonReady.gameObject:SetActive(not self.DZAHM_Logic:GetPlayerDataBySeat(self.DZAHM_Logic.mySeat).ready);
