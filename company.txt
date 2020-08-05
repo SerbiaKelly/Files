@@ -70,7 +70,6 @@ DZAHM_PlayLogic FindAllChiPlates
 	打骰子动画
 	托管
 
-ReadyButton
-DZAHM_UILayer
-InitRoomInfo
-gameUIObjects.ButtonReady.gameObject:SetActive(not self.DZAHM_Logic:GetPlayerDataBySeat(self.DZAHM_Logic.mySeat).ready);
+
+GetConfig()
+settings.ahFixedFloat           = DZAHM_Data.choiceRegular and DZAHM_Data.regularScore or 0; 
