@@ -70,6 +70,10 @@ DZAHM_PlayLogic FindAllChiPlates
 	打骰子动画
 	托管
 
+吃 飘分 混 -> 王
+杠后的摸牌未显示
+panelSetPlay
+panelSelctPlay
 
 GetConfig()
 settings.ahFixedFloat           = DZAHM_Data.choiceRegular and DZAHM_Data.regularScore or 0; 
