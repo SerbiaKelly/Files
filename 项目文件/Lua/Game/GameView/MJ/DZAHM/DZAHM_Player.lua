@@ -123,10 +123,12 @@ end
 
 --设置玩家的飘分
 function DZAHM_Player:SetPiaofen(piaofen)
-    if piaofen == nil or piaofen == 0 or piaofen == -1 then 
+    if piaofen == nil  or piaofen == -1 then ---1:表示未操作飘分
         self.piaofen:GetComponent("UILabel").text = "";
         return;
+    elseif piaofen == 0 then
+        self.piaofen:GetComponent("UILabel").text = "不飘分";
+    else
+        self.piaofen:GetComponent("UILabel").text = "飘"..piaofen .. "分";
     end
-
-    self.piaofen:GetComponent("UILabel").text = "飘"..piaofen .. "分";
 end

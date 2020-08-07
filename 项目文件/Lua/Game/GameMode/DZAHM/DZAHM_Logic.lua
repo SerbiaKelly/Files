@@ -143,23 +143,18 @@ function DZAHM_Logic:OnPlayerChiPai(msg)
     local data = self:GetMesaageData(dzm_pb.RChiPai(),msg);
     self.roomData.activeSeat = data.seat;
     self.needChuPai = data.seat == self.mySeat;--自己吃牌之后要出牌
-    if data.seat == self.mySeat then 
-        local myData = self:GetPlayerDataBySeat(self.mySeat);
-        tableClear(myData.operations);
-        tableClear(myData.tingTip);
-        tableAdd(myData.operations,data.operations);
-        tableAdd(myData.tingTip,data.tingTip);
-        --喜牌中加入吃的这个牌
-        table.insert(myData.operationCards,{operation = dzm_pb.SORT_CHI,cards = {data.others[1],data.mahjong,data.others[2]}});
-        --手牌删掉吃的牌
-        for i=1,#data.others do
-            tableRemovePlate(myData.mahjongs,data.others[i]);
-        end
-        myData.mahjongCount = #myData.mahjongs;
-    else
-        local playerData = self:GetPlayerDataBySeat(data.seat);
-        playerData.mahjongCount = playerData.mahjongCount - 2;
+    local playerData = self:GetPlayerDataBySeat(self.mySeat);
+    tableClear(playerData.operations);
+    tableClear(playerData.tingTip);
+    tableAdd(playerData.operations,data.operations);
+    tableAdd(playerData.tingTip,data.tingTip);
+    --喜牌中加入吃的这个牌
+    table.insert(playerData.operationCards,{operation = dzm_pb.SORT_CHI,cards = {data.others[1],data.mahjong,data.others[2]}});
+    --手牌删掉吃的牌
+    for i=1,#data.others do
+        tableRemovePlate(playerData.mahjongs,data.others[i]);
     end
+    playerData.mahjongCount = #playerData.mahjongs;
     --删掉被吃的人打出的被吃的那张牌
     local playerData = self:GetPlayerDataBySeat(data.outSeat);
     tableRemovePlate(playerData.paiHe,data.mahjong);
