@@ -1,12 +1,4 @@
 TortoistGit Network->SSH->SSSSH client: ssh.exe
-SendProxyMessage(msg, this.OnCreateRoomResult)
-
-local msg = Message.New()
-msg.type = csm_pb.CHUPAI
-local body = csm_pb.POperation()
-body.mahjong = plate
-msg.body = body:SerializeToString()
-SendGameMessage(msg, nil)
 
 git@106.14.29.177:/home/git/phz-client.git
 106.14.29.177/dzj/download/xhzd.apk
@@ -23,57 +15,11 @@ local breakSocketHandle,debugXpCall = require("LuaDebugjit")("localhost",7003)
 
 VSCode隐藏meta
 "files.exclude":{
-        "**/*.meta": true
-    }
+    "**/*.meta": true
+}
 
-Altas Maker
 
 王真 192.168.2.140 18888
 1101162695
 
-AHM_58
-
-table -90 195
-
-安化麻将脚本待修改
-GetHNZZMRuleText
-local hnm_pb = require("hnm_pb");
-
-飘分
-AHM_View.TogglePiaofen DZAHM
-
-hnm_pb
-dzm_pb
-DZAHM_PlayLogic.lua 80
-
-选中2  飘分准备后没显示选择飘几分
-掷骰子
-群管理设置,语音和聊天
-optional bool sendMsgAllowed = 120;
-
-
-DZAHM_PlayLogic FindAllChiPlates
-	for i=1,#plates / 3 do
-		i = i * 3 - 2
-		local temp = {type = dzm_pb.CHI,mahjong = plates[i]}
-		local mahjongs = {plates[i],plates[i+1],plates[i+2]}
-		table.sort(mahjongs, tableSortAsc)
-		temp.mahjongs = mahjongs
-		table.insert(canChiTable, temp)
-	end
-	
-	tableRemoveSameEle(plates)
-	relevantPlates = plates
-	tableRemoveSameEle(relevantPlates)
-
-	回放 参数
-	打骰子动画
-	托管
-
-吃 飘分 混 -> 王
-杠后的摸牌未显示
-panelSetPlay
-panelSelctPlay
-
-GetConfig()
-settings.ahFixedFloat           = DZAHM_Data.choiceRegular and DZAHM_Data.regularScore or 0; 
+optional sint32 floatScore = 19;            	// 飘分值 -1:表示未操作飘分  0:不飘分
