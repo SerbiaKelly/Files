@@ -38,15 +38,15 @@ function this.Awake(go)
     contentItem = gameObject.transform:Find("Prefab/contentItem")
     pnaelDetailed = gameObject.transform:Find("pnaelDetailed")
     pnaelDetailedMsg = gameObject.transform:Find("pnaelDetailed/message"):GetComponent("UILabel")
-	tip = gameObject.transform:Find("bg/tip"):GetComponent("UILabel")
-	title = gameObject.transform:Find("bg/title"):GetComponent("UILabel")
-	
+    tip = gameObject.transform:Find("bg/tip"):GetComponent("UILabel")
+    title = gameObject.transform:Find("bg/title"):GetComponent("UILabel")
+    
     buttonSave = gameObject.transform:Find("Bottom/Buttons/ButtonSave")
     buttonSelectAll = gameObject.transform:Find("Bottom/Buttons/ButtonSelectAll")
-	buttonInvertSelect = gameObject.transform:Find("Bottom/Buttons/ButtonInvertSelect")
-	message:AddClick(buttonSave.gameObject, this.OnClickButtonSave)
-	message:AddClick(buttonSelectAll.gameObject, this.OnClickButtonSelectAll)
-	message:AddClick(buttonInvertSelect.gameObject, this.OnClickButtonInvertSelect)
+    buttonInvertSelect = gameObject.transform:Find("Bottom/Buttons/ButtonInvertSelect")
+    message:AddClick(buttonSave.gameObject, this.OnClickButtonSave)
+    message:AddClick(buttonSelectAll.gameObject, this.OnClickButtonSelectAll)
+    message:AddClick(buttonInvertSelect.gameObject, this.OnClickButtonInvertSelect)
 
     message:AddClick(gameObject.transform:Find("ButtonClose").gameObject, function() PanelManager.Instance:HideWindow(gameObject.name) end)
     message:AddClick(gameObject.transform:Find("pnaelDetailed/ButtonClose").gameObject, function() pnaelDetailed.gameObject:SetActive(false) end)
@@ -56,7 +56,21 @@ end
 function this.Update() end
 function this.Start() end
 
-function this.RefreshList(isStart)
+function this.WhoShow(data)
+    gameObject.transform:Find('tip').gameObject:SetActive(not panelClub.playInfo.playId)
+    if not panelClub.playInfo.playId then
+        return
+    end
+    
+    CurOperationPlayer = data
+    isSetUserPlays = data ~= "ClubSetPlaysToggle"
+    title.text = isSetUserPlays and "玩法限制" or "玩法显示"
+    tip.text = isSetUserPlays and "注:未选中的玩法该成员将无法在牌友群看见" or "注:未选中的玩法将不会显示"
+    if isSetUserPlays then
+        this.RequestUserPlaysData()
+        return
+    end
+
     local msg = Message.New()
     msg.type = proxy_pb.CLUB_PLAY_LIST
     local body = proxy_pb.PClubPlaySetting()
@@ -65,42 +79,12 @@ function this.RefreshList(isStart)
     SendProxyMessage(msg, function (msg)
         local data = proxy_pb.RClubPlayList()
         data:ParseFromString(msg.body)
-
-        local togglePlays = panelClub.GetTogglesPlaysTable()
-        local plays = {}
+        TogglePlays = {}
         for i=1, #data.plays do
-            if not togglePlays[data.plays[i].playId] or togglePlays[data.plays[i].playId] == 1 then
-                table.insert(plays, data.plays[i])
-            end
+            table.insert(TogglePlays, data.plays[i])
         end
-        this.Show(plays, isStart)
+        this.RefreshList(TogglePlays)
     end)
-end
-
-function this.RefreshPlays(plays)
-	
-end
-
-function this.WhoShow(data)
-    gameObject.transform:Find('tip').gameObject:SetActive(not panelClub.playInfo.playId)
-    if not panelClub.playInfo.playId then
-        return
-	end
-	
-	CurOperationPlayer = data
-    isSetUserPlays = data ~= "ClubSetPlaysToggle"
-	title.text = isSetUserPlays and "玩法限制" or "玩法显示"
-	tip.text = isSetUserPlays and "注:未选中的玩法该成员将无法在牌友群看见" or "注:未选中的玩法将不会显示"
-	if isSetUserPlays then
-		this.RequestUserPlaysData()
-		return
-	end
-	TogglePlays = {}
-	for i = 2, #panelClub.clubInfo.plays do
-		table.insert(TogglePlays, panelClub.clubInfo.plays[i])
-	end
-
-    this.RefreshList(true)
 end
 
 function this.RequestUserPlaysData()
@@ -108,7 +92,7 @@ function this.RequestUserPlaysData()
     msg.type = proxy_pb.JUNIOR_PLAY_LIST
     local body = proxy_pb.PJuniorPlayList()
     body.clubId = panelClub.clubInfo.clubId
-	body.userId = CurOperationPlayer.userId
+    body.userId = CurOperationPlayer.userId
     print('拉取用户玩法设置 useid:'..CurOperationPlayer.userId .. '俱乐部id：'..body.clubId)
     msg.body = body:SerializeToString()
     SendProxyMessage(msg, function (msg)
@@ -145,7 +129,7 @@ function this.SetPlay(plays)
     for i,v in ipairs(plays) do
         table.insert(temp,v)
     end
-	table.insert( tbl,1,{plays = temp})--第一项全部玩法
+    table.insert( tbl,1,{plays = temp})--第一项全部玩法
 
     return tbl
 end
@@ -201,9 +185,9 @@ end
 
 function this.OnSelectTableItem(go)
     local playTbl = GetUserData(go)
-	--本地缓存的游戏显示记录
-	curAllPlays = {}
-	local setUserPlaysJson = #playTbl.plays > 0 and panelClub.GetTogglesPlaysTable() or {}
+    --本地缓存的游戏显示记录
+    curAllPlays = {}
+    local setUserPlaysJson = #playTbl.plays > 0 and panelClub.GetTogglesPlaysTable() or {}
     for i = 0, #playTbl.plays - 1 do
         local obj
         if i <= contentGrid.childCount - 1 then
@@ -218,20 +202,20 @@ function this.OnSelectTableItem(go)
             end)
         end
 
-		local play = playTbl.plays[i + 1]
-		table.insert(curAllPlays, play)
+        local play = playTbl.plays[i + 1]
+        table.insert(curAllPlays, play)
         local playInfo = panelClub.GetGameTyeByPlay(play.playId)
-		SetUserData(obj, {play = play, gameType = playInfo.gameType, roomType = playInfo.roomType})
+        SetUserData(obj, {play = play, gameType = playInfo.gameType, roomType = playInfo.roomType, playId = play.playId})
 
         obj.transform:Find("PlayName"):GetComponent('UILabel').text = play.name
         obj.transform:Find('PlayRule'):GetComponent('UILabel').text = "规则：" .. this.GetDetailed(play, playTbl.gameType, playTbl.roomType)
        
-		local state
-		if isSetUserPlays then
-			state = playTbl.plays[i+1].assigned
-		else
-			state = not setUserPlaysJson[playTbl.plays[i+1].playId] or setUserPlaysJson[playTbl.plays[i+1].playId] == 1
-		end
+        local state
+        if isSetUserPlays then
+            state = playTbl.plays[i+1].assigned
+        else
+            state = not setUserPlaysJson[playTbl.plays[i+1].playId] or setUserPlaysJson[playTbl.plays[i+1].playId] == 1
+        end
         obj.transform:Find("Select").gameObject:SetActive(state)
         obj.transform:Find("Bg"):GetComponent("UISprite").spriteName = state and "牌友群大厅_设置玩法_框1" or "游戏大弹窗_内容描边框"
         obj.gameObject:SetActive(true)
@@ -241,18 +225,18 @@ function this.OnSelectTableItem(go)
         for i = #playTbl.plays + 1, contentGrid.childCount do
             contentGrid:GetChild(i - 1).gameObject:SetActive(false)
         end
-	end
+    end
 
     contentGrid:GetComponent('UIGrid').repositionNow = true
     contentGrid:GetComponent('UIGrid'):Reposition()
     contentGrid.parent:GetComponent('UIScrollView'):ResetPosition()
 end
 
-function this.RefreshPlays(  )
-	
+function this.RefreshPlays()
+    
 end
 
-function this.Show(plays, isStart)
+function this.RefreshList(plays)
     for i = 0, tableGrid.childCount - 1 do
         tableGrid:GetChild(i).gameObject:SetActive(false)
     end
@@ -260,8 +244,8 @@ function this.Show(plays, isStart)
         contentGrid:GetChild(i).gameObject:SetActive(false)
     end
 
-	--分类整理
-	local tbl = this.SetPlay(plays)
+    --分类整理
+    local tbl = this.SetPlay(plays)
     for i, playTbl in ipairs(tbl) do
         local obj
         if i <= tableGrid.childCount then
@@ -277,7 +261,7 @@ function this.Show(plays, isStart)
             end)
         end
 
-		SetUserData(obj, playTbl)
+        SetUserData(obj, playTbl)
         local gameName = playTbl.roomType and cs.GetGameDataByroomType(playTbl.roomType).gameName or "全部"
         obj.transform:Find("highlight/Label1"):GetComponent("UILabel").text = gameName
         obj.transform:Find("Sprite/Label1"):GetComponent("UILabel").text = gameName
@@ -286,9 +270,9 @@ function this.Show(plays, isStart)
         obj.transform:GetComponent("UIToggle"):Set(false)
     end
 
-	local obj = tableGrid:GetChild(0).gameObject
-	this.OnSelectTableItem(obj)
-	obj.transform:GetComponent("UIToggle"):Set(true)
+    local obj = tableGrid:GetChild(0).gameObject
+    this.OnSelectTableItem(obj)
+    obj.transform:GetComponent("UIToggle"):Set(true)
     tip.gameObject:SetActive(false)
 
     if tableGrid.childCount > #tbl then
@@ -299,87 +283,90 @@ function this.Show(plays, isStart)
 
     tableGrid:GetComponent('UIGrid').repositionNow = true
     tableGrid:GetComponent('UIGrid'):Reposition()
-
-    if isStart then
-        tableGrid.parent:GetComponent('UIScrollView'):ResetPosition()
-    end
+    tableGrid.parent:GetComponent('UIScrollView'):ResetPosition()
 end
 
 function this.OnClickButtonSave(go)
     if isSetUserPlays then
-		local msg = Message.New()
-		msg.type = proxy_pb.ASSIGN_PLAY
-		local body = proxy_pb.PAssignPlay()
-		body.clubId = panelClub.clubInfo.clubId
-		body.userId = CurOperationPlayer.userId
-		for i = 0, contentGrid.childCount-1 do
-			if contentGrid:GetChild(i).gameObject.transform:Find("Select").gameObject.activeSelf then
-				table.insert(body.playIds, GetUserData(contentGrid:GetChild(i).gameObject).playId)
-				--Debugger.LogError(GetUserData(contentGrid:GetChild(i).gameObject).playId)
-			end
-		end
-		
-		if #body.playIds == 0 then
-			panelMessageTip.SetParamers("请最少保留一个玩法",1,nil)
-			PanelManager.Instance:ShowWindow('panelMessageTip')
-			return
-		end
-		msg.body = body:SerializeToString()
-		SendProxyMessage(msg, this.AssignPlayRes)
-		return
-	end
-	local tbl = {}
-	for i = 0, contentGrid.childCount-1 do
-        if i + 1 <= #TogglePlays then
-            if contentGrid:GetChild(i).gameObject.activeSelf then
-                local state = contentGrid:GetChild(i).transform:Find("Select").gameObject.activeSelf
-                tbl[TogglePlays[i+1].playId] = state and 1 or 0
-                Debugger.LogError("ID"  .. TogglePlays[i+1].playId .. "  State " .. tostring(state))
+        local msg = Message.New()
+        msg.type = proxy_pb.ASSIGN_PLAY
+        local body = proxy_pb.PAssignPlay()
+        body.clubId = panelClub.clubInfo.clubId
+        body.userId = CurOperationPlayer.userId
+        for i = 0, contentGrid.childCount-1 do
+            if contentGrid:GetChild(i).gameObject.transform:Find("Select").gameObject.activeSelf then
+                table.insert(body.playIds, GetUserData(contentGrid:GetChild(i).gameObject).playId)
             end
-		end
-	end
+        end
+        
+        if #body.playIds == 0 then
+            panelMessageTip.SetParamers("请最少保留一个玩法",1,nil)
+            PanelManager.Instance:ShowWindow('panelMessageTip')
+            return
+        end
+        msg.body = body:SerializeToString()
+        Debugger.LogError("限制保存")
+        SendProxyMessage(msg, this.AssignPlayRes)
+        return
+    end
+    
+    --之前的记录+新设置的记录
+    local tbl = {}
+    local togglePlays = panelClub.GetTogglesPlaysTable()
+    for k,v in pairs(togglePlays) do
+        tbl[k] = v
+    end
+    for i = 0, contentGrid.childCount-1 do
+        if i + 1 <= #TogglePlays then
+            local obj = contentGrid:GetChild(i).gameObject
+            if obj.activeSelf then
+                local state = obj.transform:Find("Select").gameObject.activeSelf
+                tbl[GetUserData(obj).playId] = state and 1 or 0
+            end
+        end
+    end
+    panelClub.SetTogglesPlaysTable(tbl)
 
-	panelClub.SetTogglesPlaysTable(tbl)
-	panelClub.shuaXinPlays(panelClub.clubInfo.clubId, panelClub.clubInfo.playId)
-	panelMessageTip.SetParamers("修改成功",1,nil)
-	PanelManager.Instance:ShowWindow('panelMessageTip')
+    panelClub.shuaXinPlays(panelClub.clubInfo.clubId, panelClub.clubInfo.playId)
+    panelMessageTip.SetParamers("修改成功",1,nil)
+    PanelManager.Instance:ShowWindow('panelMessageTip')
 end
 
 function this.OnClickButtonSelectAll(go)
-	for i = 0, contentGrid.childCount-1 do
-		local obj = contentGrid:GetChild(i).gameObject
-		if obj.activeSelf then
-			this.SetPlaySelectState(obj,true)
-		end
-	end
+    for i = 0, contentGrid.childCount-1 do
+        local obj = contentGrid:GetChild(i).gameObject
+        if obj.activeSelf then
+            this.SetPlaySelectState(obj,true)
+        end
+    end
 end
 
 function this.OnClickButtonInvertSelect(go)
-	for i = 0, contentGrid.childCount-1 do
-		local obj = contentGrid:GetChild(i).gameObject
-		if obj.activeSelf then
-			if obj.transform:Find("Select").gameObject.activeSelf then
-				this.SetPlaySelectState(obj,false)
-			else
-				this.SetPlaySelectState(obj,true)
-			end
-		end
-	end
+    for i = 0, contentGrid.childCount-1 do
+        local obj = contentGrid:GetChild(i).gameObject
+        if obj.activeSelf then
+            if obj.transform:Find("Select").gameObject.activeSelf then
+                this.SetPlaySelectState(obj,false)
+            else
+                this.SetPlaySelectState(obj,true)
+            end
+        end
+    end
 end
 
 function this.AssignPlayRes(msg)
-	local data = proxy_pb.RResult()
-	data:ParseFromString(msg.body)
-	if data.code == 1 then
-		panelMessageTip.SetParamers("修改成功",1,nil)
-	else
-		panelMessageTip.SetParamers("修改失败",1,nil)
-		print('修改失败 error='..data.msg)
-	end
-	PanelManager.Instance:ShowWindow('panelMessageTip')
+    local data = proxy_pb.RResult()
+    data:ParseFromString(msg.body)
+    if data.code == 1 then
+        panelMessageTip.SetParamers("修改成功",1,nil)
+    else
+        panelMessageTip.SetParamers("修改失败",1,nil)
+        print('修改失败 error='..data.msg)
+    end
+    PanelManager.Instance:ShowWindow('panelMessageTip')
 end
 
 function this.SetPlaySelectState(obj,state)
-	obj.transform:Find("Select").gameObject:SetActive(state)
-	obj.transform:Find("Bg"):GetComponent("UISprite").spriteName = state and "牌友群大厅_设置玩法_框1" or "游戏大弹窗_内容描边框"
+    obj.transform:Find("Select").gameObject:SetActive(state)
+    obj.transform:Find("Bg"):GetComponent("UISprite").spriteName = state and "牌友群大厅_设置玩法_框1" or "游戏大弹窗_内容描边框"
 end
