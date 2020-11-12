@@ -1,4 +1,4 @@
-﻿TortoistGit设置 Network->SSH->SSSSH client: ssh.exe
+TortoistGit设置 Network->SSH->SSSSH client: ssh.exe
 项目git地址 git@106.14.29.177:/home/git/phz-client.git
 106.14.29.177/dzj/download/xhzd.apk			嗨皮
 远程资源服 106.14.29.177	root	Haiya@2016
@@ -34,3 +34,8 @@ birdType 1 一鸟全中	BirdAllHit
 birdType 2 135		bird13579
 birdType 3 庄家方位	BirdBankerStart
 birdType 4 赢家方位	birdWinStart
+
+tbl {}
+	playTbl{gameType,plays,roomType,gameName}
+
+玩法限制 3 -> 1(1,2,3) -> 2(4,5)
